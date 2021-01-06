@@ -2,7 +2,9 @@
   <div id="app">
     <router-view/>
     <modal
-      :message="modalMessage"/>
+      v-if="modal.display"
+      :message="modal.mode"
+      @finish="modal.display = false"/>
   </div>
 </template>
 
@@ -16,9 +18,9 @@
       return {
         messages: [],
         connection: null,
-        modalMessage: {
-          title: '支払いが完了しました',
-          description: 'まもなくゲームを開始します'
+        modal: {
+          display: false,
+          mode: ''
         }
       }
     },
@@ -35,14 +37,18 @@
 
         // ルーター処理の場合
         if (message.mode === 'router') {
-          this.$router.push(message.link)
+          this.$router.push(message.route)
         }
 
-        // 
+        // モーダル表示の場合
+        if (message.mode === 'modal') {
+          this.modal.display = true
+          this.modal.mode = message.modal
+        }
       }
     },
     mounted() {
-      const uri = 'ws://192.168.0.23:50000'
+      const uri = 'ws://172.20.10.7:50000'
       this.connection = new WebSocket(uri)
       this.connection.onopen = this.onOpen
       this.connection.onmessage = this.onMessage
@@ -57,11 +63,18 @@
 #app {
   display: block;
   height: 100vh;
+  width: 100%;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #ffffff;
   margin: 0;
+  background-image: url("./assets/img/background.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100vw auto;
+  background-color: #001021;
+  background-blend-mode:lighten;
 }
 </style>

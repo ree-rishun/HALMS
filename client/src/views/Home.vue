@@ -23,12 +23,6 @@ export default {
     display: block;
     width: 100%;
     height: 100vh;
-    background-image: url("../assets/img/background.png");
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 100vw auto;
-    background-color: #001021;
-    background-blend-mode:lighten;
   }
 
   #logo {

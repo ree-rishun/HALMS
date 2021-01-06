@@ -7,10 +7,23 @@
 
 <script>
   export default {
-    name: "Rule"
+    name: 'Rule',
+    methods: {
+      startGame () {
+        this.$router.push('/game')
+      }
+    },
+    mounted () {
+      setTimeout(
+        () => {
+          this.startGame()
+        },
+        3000
+      )
+    }
   }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 
 </style>
