@@ -1,0 +1,44 @@
+<template>
+  <div id="home">
+    <img
+      id="logo"
+      src="../assets/img/logo_wh.png">
+    <p>- ICカードをタッチしてスタート -</p>
+  </div>
+</template>
+
+<script>
+
+export default {
+  name: 'Home'
+}
+</script>
+
+<style scoped lang="scss">
+  @keyframes blink{
+    0% {opacity:0;}
+    100% {opacity:1;}
+  }
+  #home {
+    display: block;
+    width: 100%;
+    height: 100vh;
+    background-image: url("../assets/img/background.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100vw auto;
+    background-color: #001021;
+    background-blend-mode:lighten;
+  }
+
+  #logo {
+    display: block;
+    width: 100%;
+    height: auto;
+    padding: 60px 0 60px;
+  }
+  p {
+    color: #b5b5bf;
+    animation:blink 1s ease-in-out infinite alternate;
+  }
+</style>
