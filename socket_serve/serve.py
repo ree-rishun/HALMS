@@ -21,6 +21,7 @@ def new_client(client, server):
 
 # 新規メッセージ受信時処理
 def send_msg_allclient(client, server, message):
+    print(message)
     server.send_message_to_all(message)
 
 # 自身のIPを取得

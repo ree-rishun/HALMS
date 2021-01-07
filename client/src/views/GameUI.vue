@@ -37,7 +37,7 @@
       }
     },
     mounted () {
-      const uri = 'ws://172.20.10.7:50000'
+      const uri = 'ws://192.168.0.23:50000'
       this.connection = new WebSocket(uri)
       this.connection.onopen = this.onOpen
       this.connection.onmessage = this.onMessage
