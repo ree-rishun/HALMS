@@ -78,8 +78,9 @@
       const deviceID = 'D0001'
       firebase.database().ref('/devices/' + deviceID).once('value').then((snapshot) => {
         const server = (snapshot.val() && snapshot.val().server) || 'Anonymous';
-
         const uri = 'ws://' + server + ':50000'
+
+        // ソケットサーバへ接続
         this.connection = new WebSocket(uri)
         this.connection.onopen = this.onOpen
         this.connection.onmessage = this.onMessage
