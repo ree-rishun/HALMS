@@ -20,7 +20,11 @@
     name: 'GameUI',
     data () {
       return {
-        life: 100
+        life: 100,
+        time: {
+          limit: 30,
+          count: 0
+        }
       }
     },
     methods: {
@@ -34,7 +38,39 @@
         // ルーター処理の場合
         if (message.mode === 'damage') {
           this.life -= message.damage
+
+          // ライフが0以下になった場合にゲーム終了
+          if (this.life <= 0) {
+            this.scorpionDead()
+          }
         }
+      },
+      scorpionDead () {
+        // タイマーの停止
+        clearInterval(this.time.timer)
+
+        // 結果画面に遷移
+        this.$router.push({
+          name: 'Result',
+          query: {
+            result: 'win',
+            time: this.time.count
+          }
+        })
+      },
+      timeUp () {
+        // タイマーの停止
+        clearInterval(this.time.timer)
+
+        // 結果画面に遷移
+        this.$router.push({
+          name: 'Result',
+          query: {
+            result: 'win',
+            time: this.time.limit,
+            timer: null
+          }
+        })
       }
     },
     mounted () {
@@ -48,6 +84,20 @@
         this.connection.onopen = this.onOpen
         this.connection.onmessage = this.onMessage
       })
+
+      // タイムアップ時間を設定
+      this.time.timer = setInterval(
+        () => {
+          // 時間を加算
+          this.time.count++
+
+          // タイムアップ時に終了
+          if (this.time.count >= this.time.limit) {
+            this.timeUp()
+          }
+        },
+        1000
+      )
     }
   }
 </script>
