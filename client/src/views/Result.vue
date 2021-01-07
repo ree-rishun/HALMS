@@ -1,12 +1,22 @@
 <template>
   <div id="result">
-    <h2 v-if="result.result === 'win'">勝利</h2>
-    <h2 v-else>敗北</h2>
+    <img
+      v-if="this.$route.query.result === 'win'"
+      src="../assets/img/win.png">
+    <img
+      v-else
+      src="../assets/img/lose.png">
 
-    <div>
-      タイム：{{ result.time }}
-
-    </div>
+    <table>
+      <tr>
+        <td>タイム</td>
+        <td>{{ result.time }}</td>
+      </tr>
+      <tr>
+        <td>スコア</td>
+        <td>{{ result.time }}</td>
+      </tr>
+    </table>
   </div>
 </template>
 
@@ -26,6 +36,7 @@
     },
     mounted () {
       // 勝利/敗北の判定
+      this.result = this.$route.query
       if (this.$route.query.result === 'win') {
         // 勝利
       } else {
@@ -33,13 +44,16 @@
       }
 
       // 表示終了時間
-      setTimeout(
+      const timer = setTimeout(
         () => {
           // ホーム画面へ戻る
-          this.$router.push('/home')
+          this.$router.push('/')
         },
         15000
       )
+
+      // デバッグ用
+      clearTimeout(timer)
     }
   }
 </script>

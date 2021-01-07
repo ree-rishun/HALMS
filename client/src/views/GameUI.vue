@@ -23,7 +23,8 @@
         life: 100,
         time: {
           limit: 30,
-          count: 0
+          count: 0,
+          timer: null
         }
       }
     },
@@ -37,6 +38,7 @@
 
         // ルーター処理の場合
         if (message.mode === 'damage') {
+          console.log(this.life)
           this.life -= message.damage
 
           // ライフが0以下になった場合にゲーム終了
@@ -66,9 +68,8 @@
         this.$router.push({
           name: 'Result',
           query: {
-            result: 'win',
-            time: this.time.limit,
-            timer: null
+            result: 'lose',
+            time: this.time.limit
           }
         })
       }
@@ -91,6 +92,8 @@
         () => {
           // 時間を加算
           this.time.count++
+
+          console.log(this.time.count)
 
           // タイムアップ時に終了
           if (this.time.count >= this.time.limit) {
