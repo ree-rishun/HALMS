@@ -10,6 +10,7 @@
 
 <script>
   import Modal from '@/components/Modal'
+  import firebase from 'firebase'
 
   export default {
     name: 'room',
@@ -48,10 +49,17 @@
       }
     },
     mounted() {
-      const uri = 'ws://172.20.10.7:50000'
-      this.connection = new WebSocket(uri)
-      this.connection.onopen = this.onOpen
-      this.connection.onmessage = this.onMessage
+      // IPアドレスの取得
+      const deviceID = 'D0001'
+      firebase.database().ref('/devices/' + deviceID).once('value').then((snapshot) => {
+        const server = (snapshot.val() && snapshot.val().server) || 'Anonymous';
+
+        const uri = 'ws://' + server + ':50000'
+        console.log(uri)
+        this.connection = new WebSocket(uri)
+        this.connection.onopen = this.onOpen
+        this.connection.onmessage = this.onMessage
+      });
     }
   }
 </script>

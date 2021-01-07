@@ -6,7 +6,7 @@ def new_client(client, server):
 def send_msg_allclient(client, server, message):
     server.send_message_to_all(message)
 
-server = WebsocketServer(50000, host='192.168.0.23')
+server = WebsocketServer(50000, host='172.20.10.7')
 
 # 新しいクライアントが接続したときの処理
 server.set_fn_new_client(new_client)

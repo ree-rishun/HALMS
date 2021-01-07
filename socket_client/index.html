@@ -31,11 +31,18 @@
         connection.send(data);
     }
 
-    function prepareSend() {
-        var form = document.forms.form;
-        if (form.message.value != "") {
-            websocketSend(form.message.value);
-        }
+    function prepareSend(message) {
+        websocketSend(message);
+    }
+
+    function home () {
+      websocketSend('{"mode":"router","route":"/"}')
+    }
+    function pay () {
+      websocketSend('{"mode":"modal","modal":"payment"}')
+    }
+    function damage () {
+      websocketSend('{"mode":"damage","damage":"10"}')
     }
 
     function addRow(data){
@@ -74,6 +81,9 @@
             <input type="text" name="message">
         </form>
         <div id="sendButton" onclick="prepareSend()">SEND</div>
+        <div onclick="home()">HOME</div>
+        <div onclick="pay()">PAY</div>
+        <div onclick="damage()">DAMAGE</div>
         <div id="table"></div>
     </center>
 </body>
