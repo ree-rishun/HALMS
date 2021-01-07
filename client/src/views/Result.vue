@@ -1,6 +1,6 @@
 <template>
   <div id="result">
-
+    <img>
   </div>
 </template>
 
