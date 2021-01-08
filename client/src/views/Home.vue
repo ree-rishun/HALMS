@@ -10,7 +10,11 @@
 <script>
 
 export default {
-  name: 'Home'
+  name: 'Home',
+  mounted () {
+    // サソリの再開
+    this.connection.send('{"mode":"move","pattern":"play"}')
+  }
 }
 </script>
 

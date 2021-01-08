@@ -12,10 +12,10 @@
       <p>{{ Math.round(result.time * 100) / 100 }}秒</p>
 
       <h3>投げた手裏剣の数</h3>
-      <p>{{ result.attackNum }}回</p>
+      <p>{{ result.attackNum !== 0 ? result.attackNum : 0 }}回</p>
 
       <h3>与えたダメージ</h3>
-      <p>{{ result.damage }}</p>
+      <p>{{ result.damage !== 0 ? result.damage : 0 }}</p>
 
       <div id="result_score__score">
         <h3>合計得点</h3>
@@ -42,20 +42,16 @@
     },
     methods: {
       calcScore () {
+        console.log('score')
+        console.log(this.result)
         // タイムを加算
         this.score += Math.round((60 - this.result.time) * 1000)
-
-        console.log(this.score)
 
         // 攻撃回数を加算
         this.score += (this.result.attackNum / 20) * 10000
 
-        console.log(this.score)
-
         // ダメージを加算
         this.score += Number(this.result.damage)
-
-        console.log(this.score)
       }
     },
     mounted () {

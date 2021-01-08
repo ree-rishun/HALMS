@@ -74,7 +74,9 @@
           name: 'Result',
           query: {
             result: 'lose',
-            time: this.time.limit
+            time: this.time.limit,
+            damage: this.damage,
+            attackNum: this.attackNum
           }
         })
       }
@@ -107,6 +109,9 @@
       )
     },
     beforeDestroy () {
+      // サソリの停止
+      this.connection.send('{"mode":"move","pattern":"stop"}')
+      // ソケットのクローズ
       this.connection.close()
     }
   }
