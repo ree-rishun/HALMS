@@ -6,7 +6,22 @@ import time
 import logging
 import json
 import smbus
- 
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import db
+
+# 自身のIDを定義
+DEVICE_ID = "D0001"
+
+# Firebaseの設定
+cred = credentials.Certificate("key/halms-49316-firebase-adminsdk-y7wsu-6a5942aa12.json")
+
+# RealtimeDBの定義
+firebase_admin.initialize_app(cred, {
+    'databaseURL': 'https://halms-49316-default-rtdb.firebaseio.com/'
+})
+
+# ログ用の設定
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 handler = logging.StreamHandler()
@@ -35,12 +50,12 @@ def on_message(ws, message):
     print(msg_obj["hit"])
 
     # ヒット箇所によって処理を分岐
-    if msg_obj["hit"] == "left":
+    if msg_obj["hit"] == "L":
       bus.write_byte(SLAVE_LEFT,ord('R'))
-    elif msg_obj["hit"] == "right":
+    elif msg_obj["hit"] == "R":
       bus.write_byte(SLAVE_RIGHT,ord('R'))
-    elif msg_obj["hit"] == "head":
-      bus.write_byte(SLAVE_HEAD,ord('R'))
+    elif msg_obj["hit"] == "H":
+      bus.write_byte(SLAVE_HEAD,ord('B'))
     
   elif msg_obj["mode"] == "router":
     print('G')
@@ -76,11 +91,17 @@ def on_open(ws):
 
 # メイン処理
 if __name__ == "__main__":
-    #websocket.enableTrace(True)
-    websocket.enableTrace(False)
-    ws = websocket.WebSocketApp("ws://172.20.10.10:50000",
+  # ソケットサーバのIPを取得
+  ref = db.reference('/devices/' + DEVICE_ID)
+  server_info = ref.get()
+  print("socket server : " + server_info['server'])
+
+  # ソケット通信の開始
+  #websocket.enableTrace(True)
+  websocket.enableTrace(False)
+  ws = websocket.WebSocketApp("ws://" + server_info['server'] + ":50000",
                               on_message = on_message,
                               on_error = on_error,
                               on_close = on_close)
-    ws.on_open = on_open
-    ws.run_forever()
+  ws.on_open = on_open
+  ws.run_forever()
