@@ -50,12 +50,12 @@ def on_message(ws, message):
     print(msg_obj["hit"])
 
     # ヒット箇所によって処理を分岐
-    if msg_obj["hit"] == "left":
+    if msg_obj["hit"] == "L":
       bus.write_byte(SLAVE_LEFT,ord('R'))
-    elif msg_obj["hit"] == "right":
+    elif msg_obj["hit"] == "R":
       bus.write_byte(SLAVE_RIGHT,ord('R'))
-    elif msg_obj["hit"] == "head":
-      bus.write_byte(SLAVE_HEAD,ord('R'))
+    elif msg_obj["hit"] == "H":
+      bus.write_byte(SLAVE_HEAD,ord('B'))
     
   elif msg_obj["mode"] == "router":
     print('G')
