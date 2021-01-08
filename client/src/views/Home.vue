@@ -1,5 +1,5 @@
 <template>
-  <div id="home">
+  <div id="home" @click="$router.push('/rule')">
     <img
       id="logo"
       src="../assets/img/logo_wh.png">

@@ -9,7 +9,7 @@
 
     <div
       id="scorpion_life">
-      <span :style="'width: ' + life + '%'"></span>
+      <span :style="'width: ' + ((life - damage) / 100) + '%'"></span>
     </div>
   </div>
 </template>
@@ -20,9 +20,11 @@
     name: 'GameUI',
     data () {
       return {
-        life: 100,
+        life: 10000,
+        damage: 0,
+        attackNum: 0,
         time: {
-          limit: 30,
+          limit: 60,
           count: 0,
           timer: null
         }
@@ -38,11 +40,12 @@
 
         // ルーター処理の場合
         if (message.mode === 'damage') {
-          console.log(this.life)
-          this.life -= message.damage
+          console.log(this.life - this.damage)
+          this.damage += (Number(message.damage) * 6)
+          this.attackNum++
 
           // ライフが0以下になった場合にゲーム終了
-          if (this.life <= 0) {
+          if (this.life - this.damage <= 0) {
             this.scorpionDead()
           }
         }
@@ -56,7 +59,9 @@
           name: 'Result',
           query: {
             result: 'win',
-            time: this.time.count
+            time: this.time.count,
+            damage: this.damage,
+            attackNum: this.attackNum
           }
         })
       },
@@ -91,17 +96,18 @@
       this.time.timer = setInterval(
         () => {
           // 時間を加算
-          this.time.count++
-
-          console.log(this.time.count)
+          this.time.count += 0.01
 
           // タイムアップ時に終了
           if (this.time.count >= this.time.limit) {
             this.timeUp()
           }
         },
-        1000
+        10
       )
+    },
+    beforeDestroy () {
+      this.connection.close()
     }
   }
 </script>
