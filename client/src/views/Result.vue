@@ -7,6 +7,15 @@
       v-else
       src="../assets/img/lose.png">
 
+    <img
+      class="result_image"
+      v-if="this.$route.query.result === 'win'"
+      src="../assets/img/rabit_win.png">
+    <img
+      class="result_image"
+      v-else
+      src="../assets/img/rabit_dead.png">
+
     <div id="result_score">
       <h3>討伐時間</h3>
       <p>{{ Math.round(result.time * 100) / 100 }}秒</p>
@@ -16,6 +25,9 @@
 
       <h3>与えたダメージ</h3>
       <p>{{ result.damage !== 0 ? result.damage : 0 }}</p>
+
+      <h3>受けたダメージ</h3>
+      <p>{{ result.life !== 0 ? result.life : 0 }}</p>
 
       <div id="result_score__score">
         <h3>合計得点</h3>
@@ -37,7 +49,11 @@
           attackNum: 1
         },
         bgm: null,
-        score: 0
+        score: 0,
+        time: {
+          timer: null,
+          duration: 14000
+        }
       }
     },
     methods: {
@@ -59,10 +75,8 @@
       this.result = this.$route.query
       if (this.$route.query.result === 'win') {
         // 勝利
-        this.bgm = new Audio('../assets/music/win.mp3')
       } else {
         // 敗北
-        this.bgm = new Audio('../assets/music/win.mp3')
       }
 
       this.calcScore()
@@ -75,19 +89,19 @@
       )
 
       // 表示終了時間
-      const timer = setTimeout(
+      this.time.timer = setTimeout(
         () => {
           // ホーム画面へ戻る
           this.$router.push('/')
         },
-        15000
+        this.time.duration
       )
 
       // デバッグ用
-      // clearTimeout(timer)
+      // clearTimeout(this.time.timer)
     },
     destroyed () {
-      this.bgm.pause()
+      clearTimeout(this.time.timer)
     }
   }
 </script>
@@ -121,5 +135,11 @@
         line-height: 7rem;
       }
     }
+  }
+
+  .result_image {
+    position: fixed;
+    bottom: 10vh;
+    left: 50px;
   }
 </style>

@@ -60,6 +60,30 @@
         this.connection.onopen = this.onOpen
         this.connection.onmessage = this.onMessage
       });
+    },
+    updated () {
+      console.log(this.$route)
+      if (this.$route.name === 'Home') {
+        this.connection.send('{"mode":"music","music":"home"}')
+        // サソリの再開
+        this.connection.send('{"mode":"move","pattern":"play"}')
+      }
+      else if (this.$route.name === 'Game') {
+        this.connection.send('{"mode":"music","music":"battle"}')
+      }
+      else if (this.$route.name === 'Result') {
+        // 勝利/敗北の判定
+        if (this.$route.query.result === 'win') {
+          // 勝利
+          this.connection.send('{"mode":"music","music":"win"}')
+        } else {
+          // 敗北
+          this.connection.send('{"mode":"music","music":"lose"}')
+        }
+      }
+      else if (this.$route.name === 'Rule') {
+        this.connection.send('{"mode":"music","music":"rule"}')
+      }
     }
   }
 </script>

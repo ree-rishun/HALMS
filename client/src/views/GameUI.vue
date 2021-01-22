@@ -3,13 +3,25 @@
     <img
       id="title"
       src="../assets/img/sasori.png">
-    <img
-      id="scorpion"
-      src="../assets/img/sasori_img.png">
 
-    <div
-      id="scorpion_life">
-      <span :style="'width: ' + ((life - damage) / 100) + '%'"></span>
+    <div id="scorpion">
+      <img
+        src="../assets/img/sasori_img.png">
+
+      <div
+        id="scorpion_life">
+        <span :style="'width: ' + ((scorpionLife - damage) / 100) + '%'"></span>
+      </div>
+    </div>
+
+    <div id="user">
+      <img
+        src="../assets/img/rabit_attack.png">
+
+      <div
+        id="user_life">
+        <span :style="'width: ' + ((userLife - userDamage) / 300) + '%'"></span>
+      </div>
     </div>
   </div>
 </template>
@@ -20,7 +32,9 @@
     name: 'GameUI',
     data () {
       return {
-        life: 10000,
+        scorpionLife: 10000,
+        userLife: 30000,
+        userDamage: 0,
         damage: 0,
         attackNum: 0,
         time: {
@@ -40,13 +54,21 @@
 
         // ルーター処理の場合
         if (message.mode === 'damage') {
-          console.log(this.life - this.damage)
-          this.damage += (Number(message.damage) * 6)
+          console.log('user : ' + this.scorpionLife - this.damage)
+          this.damage += (Number(message.damage) * 4)
           this.attackNum++
 
           // ライフが0以下になった場合にゲーム終了
-          if (this.life - this.damage <= 0) {
+          if (this.scorpionLife - this.damage <= 0) {
             this.scorpionDead()
+          }
+        } else if (message.mode === 'damage_user') {
+          console.log(this.userLife - this.userDamage)
+          this.userDamage += (Number(message.damage) * 3)
+
+          // ライフが0以下になった場合にゲーム終了
+          if (this.scorpionLife - this.userDamage <= 0) {
+            this.userDead()
           }
         }
       },
@@ -61,7 +83,24 @@
             result: 'win',
             time: this.time.count,
             damage: this.damage,
-            attackNum: this.attackNum
+            attackNum: this.attackNum,
+            life: this.userDamage
+          }
+        })
+      },
+      userDead () {
+        // タイマーの停止
+        clearInterval(this.time.timer)
+
+        // 結果画面に遷移
+        this.$router.push({
+          name: 'Result',
+          query: {
+            result: 'lose',
+            time: this.time.count,
+            damage: this.damage,
+            attackNum: this.attackNum,
+            life: this.userDamage
           }
         })
       },
@@ -107,8 +146,13 @@
         },
         10
       )
+
+      // タイマーの停止
+      // clearInterval(this.time.timer)
     },
     beforeDestroy () {
+      // タイマーの停止
+      clearInterval(this.time.timer)
       // サソリの停止
       this.connection.send('{"mode":"move","pattern":"stop"}')
       // ソケットのクローズ
@@ -119,31 +163,75 @@
 
 <style scoped lang="scss">
   #title {
-
+    margin-bottom: 50px;
   }
+
+  // サソリのスタイル
   #scorpion {
-    width: 400px;
-    height: auto;
-    margin-top: -120px;
-  }
+    display: inline-block;
+    width: 45%;
+    text-align: center;
+    vertical-align: top;
 
-  #scorpion_life {
-    width: 80%;
-    height: 40px;
-    margin: 0 10%;
-    border-radius: 10px;
-    background: #001021;
-    overflow: hidden;
-    border: solid 3px #b5b5bf;
+    img {
+      margin: -100px auto -50px;
+      height: 450px;
+    }
 
-    span {
+    #scorpion_life {
       display: block;
-      background: red;
-      height: 100%;
-      -webkit-transition: all 0.3s ease;
-      -moz-transition: all 0.3s ease;
-      -o-transition: all 0.3s ease;
-      transition: all  0.3s ease;
+      width: 100%;
+      height: 30px;
+      margin: 0;
+      border-radius: 10px 0 0 10px;
+      background: #001021;
+      overflow: hidden;
+      border: solid 3px #b5b5bf;
+
+      span {
+        display: block;
+        background: red;
+        height: 100%;
+        -webkit-transition: all 0.3s ease;
+        -moz-transition: all 0.3s ease;
+        -o-transition: all 0.3s ease;
+        transition: all  0.3s ease;
+      }
     }
   }
+
+  // サソリのスタイル
+  #user {
+    display: inline-block;
+    width: 45%;
+    text-align: center;
+    vertical-align: top;
+
+    img {
+      height: 300px;
+    }
+
+    #user_life {
+      display: block;
+      width: 100%;
+      height: 30px;
+      margin: 0;
+      border-radius: 0 10px 10px 0;
+      background: #001021;
+      overflow: hidden;
+      border: solid 3px #b5b5bf;
+      text-align: right;
+
+      span {
+        display: inline-block;
+        background: #007cff;
+        height: 100%;
+        -webkit-transition: all 0.3s ease;
+        -moz-transition: all 0.3s ease;
+        -o-transition: all 0.3s ease;
+        transition: all  0.3s ease;
+      }
+    }
+  }
+
 </style>

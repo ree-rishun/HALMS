@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <script>
-    var uri = 'ws://192.168.0.23:50000';
-
     window.onload = function () {
+        const uri = 'ws://' + '172.20.10.10' + ':50000'
+        // const uri = 'ws://' + '192.168.0.22' + ':50000'
         connection = new WebSocket(uri);
         connection.onopen = onOpen;
         connection.onmessage = onMessage;
@@ -41,8 +41,14 @@
     function pay () {
       websocketSend('{"mode":"modal","modal":"payment"}')
     }
-    function damage () {
-      websocketSend('{"mode":"damage","damage":"10"}')
+    function damage (hit) {
+      websocketSend('{"mode":"damage","damage":"100","hit":"' + hit + '"}')
+    }
+    function wow (hit) {
+      websocketSend('{"mode":"damage_user","damage":"100"}')
+    }
+    function move (move) {
+      websocketSend('{"mode":"move","pattern":"' + move + '"}')
     }
 
     function addRow(data){
@@ -78,12 +84,18 @@
 <body>
     <center>
         <form name='form'>
+            <input type="text" name="ip" placeholder="IP">
             <input type="text" name="message">
         </form>
         <div id="sendButton" onclick="prepareSend()">SEND</div>
         <div onclick="home()">HOME</div>
         <div onclick="pay()">PAY</div>
-        <div onclick="damage()">DAMAGE</div>
+        <div onclick="damage('L')">左</div>
+        <div onclick="damage('R')">右</div>
+        <div onclick="damage('H')">頭</div>
+        <div onclick="wow()">自分が喰らう</div>
+        <div onclick="move('S')">stop</div>
+        <div onclick="move('P')">play</div>
         <div id="table"></div>
     </center>
 </body>
